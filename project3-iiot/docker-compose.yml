@@ -1,0 +1,110 @@
+# IIoT Architecture Example
+# https://inductiveautomation.com/ignition/architectures
+# https://inductiveautomation.com/static/pdf/IgnitionArchitecture-IIoT-CloudRedundant.pdf
+---
+x-default-logging:
+  &default-logging
+  logging:
+    options:
+      max-size: '100m'
+      max-file: '5'
+    driver: json-file
+
+x-ignition-opts:
+  &ignition-opts
+  <<: *default-logging
+  env_file: gw-init/gateway.env
+  secrets:
+    - gateway-admin-password
+  healthcheck:
+    disable: true
+  networks:
+    - default
+    - database
+
+services:
+  gateway:
+    <<: *ignition-opts
+    build:
+      context: gw-build
+      dockerfile: Dockerfile
+      args:
+        IGNITION_VERSION: ${IGNITION_VERSION:-latest}
+        SUPPLEMENTAL_MODULES: "mqttdistributor mqttengine"
+        SUPPLEMENTAL_MODULES_OMIT_COMMISSIONING_EULAS: "Y"
+        BASE_GWBK_NAME: gateway.gwbk
+        GATEWAY_ADMIN_USERNAME: admin
+      secrets:
+        # NOTE: changing a build secret will not bust the cache, run the build with `--no-cache` to force a rebuild
+        - gateway-admin-password
+    # pull_policy: build
+    hostname: gateway
+    command: >
+      -n Ignition-gateway
+      -m ${GATEWAY_MAX_MEMORY:-512}
+      -d
+    volumes:
+      - gateway-data:/usr/local/bin/ignition/data
+      - ./gw-backup/gateway:/backup
+    labels:
+      - traefik.enable=true
+
+  gateway-edge1:
+    <<: *ignition-opts
+    build:
+      context: gw-build
+      dockerfile: Dockerfile
+      args:
+        IGNITION_VERSION: ${IGNITION_VERSION:-latest}
+        SUPPLEMENTAL_MODULES: "mqtttransmission"
+        SUPPLEMENTAL_MODULES_OMIT_COMMISSIONING_EULAS: "Y"
+        BASE_GWBK_NAME: edge1.gwbk
+        IGNITION_EDITION: edge
+        GATEWAY_ADMIN_USERNAME: admin
+      secrets:
+        - gateway-admin-password
+    # pull_policy: build
+    command: >
+      -n Ignition-edge1
+      -m ${GATEWAY_MAX_MEMORY:-512}
+      -d
+    volumes:
+      - gateway-edge1-data:/usr/local/bin/ignition/data
+      - ./gw-backup/edge1:/backup
+    labels:
+      - traefik.enable=true
+
+  db:
+    <<: *default-logging
+    image: mariadb:${MARIADB_VERSION:-latest}
+    networks:
+      - database
+    environment:
+      MARIADB_USER: ignition
+      MARIADB_PASSWORD_FILE: /run/secrets/db-ignition-password
+      MARIADB_DATABASE: ignition
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
+    secrets:
+      - db-root-password
+      - db-ignition-password
+    volumes:
+      - db-data:/var/lib/mysql
+    
+secrets:
+  gateway-admin-password:
+    file: secrets/gateway-admin-password
+  db-ignition-password:
+    file: secrets/db-ignition-password
+  db-root-password:
+    file: secrets/db-root-password
+
+networks:
+  default:
+    name: proxy
+    external: true
+  database:
+
+volumes:
+  gateway-data:
+  gateway-edge1-data:
+  db-data:

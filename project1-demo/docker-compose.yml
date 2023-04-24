@@ -1,0 +1,71 @@
+services:
+  ## Frontend Gateway
+  frontend1:
+    image: inductiveautomation/ignition:8.1.27
+    networks:
+      - default
+      - database
+    volumes:
+      - frontend1-data:/usr/local/bin/ignition/data
+      - ./gw-backup/frontend:/gw-backup
+    env_file: ../basic.env
+    environment:
+      - GATEWAY_MODULES_ENABLED=opc-ua,perspective
+    healthcheck:
+      disable: true
+    labels:
+      - traefik.enable=true
+      - traefik.hostname=frontend1
+    command: >
+      -n webinar-demo-fe
+      -a frontend1.localtest.me
+      -h 80
+      -s 443
+  ## Backend Gateway
+  backend1:
+    image: inductiveautomation/ignition:8.1.27
+    networks:
+      - default
+      - database
+    volumes:
+      - backend1-data:/usr/local/bin/ignition/data
+      - ./gw-backup/backend:/gw-backup
+    env_file: ../basic.env
+    environment:
+      - GATEWAY_MODULES_ENABLED=alarm-notification,opc-ua,logix-driver,modbus-driver-v2,perspective,tag-historian,web-developer
+      - GATEWAY_NETWORK_0_HOST=frontend1
+    healthcheck:
+      disable: true
+    labels:
+      - traefik.enable=true
+      - traefik.hostname=backend1
+    command: >
+      -n webinar-demo-be
+      -a backend1.localtest.me
+      -h 80
+      -s 443
+  ## Database
+  database1:
+    image: postgres:15
+    networks:
+      database:
+        aliases:
+          - database1
+          - more.useful.alias
+    volumes:
+      - database1-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ignition
+      POSTGRES_PASSWORD: ignition
+      POSTGRES_DB: ignition
+
+networks:
+  default:
+    name: proxy
+    external: true
+  database:
+
+volumes:
+  frontend1-data:
+  backend1-data:
+  database1-data:

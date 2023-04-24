@@ -1,0 +1,39 @@
+# Portainer UI Stack
+---
+services:
+  portainer:
+    image: portainer/portainer-ce:2.18.1
+    hostname: portainer
+    container_name: portainer
+    depends_on:
+      - templates
+    volumes:
+      - portainer-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      hidden: 'true'
+      traefik.enable: 'true'
+      traefik.http.services.portainer.loadbalancer.server.port: 9000
+    restart: always
+    command: >
+      --hide-label hidden=true
+      --templates http://templates/templates.json
+
+  templates:
+    build:
+      context: ./templates
+    labels:
+      traefik.enable: true
+      traefik.http.routers.portainer-templates.rule: Host(`portainer.localtest.me`) && PathPrefix(`/portainer-templates`)
+      traefik.http.routers.portainer-templates.middlewares: portainer-templates-stripprefix
+      traefik.http.middlewares.portainer-templates-stripprefix.stripprefix.prefixes: /portainer-templates
+      traefik.http.middlewares.portainer-templates-stripprefix.stripprefix.forceSlash: false
+
+networks:
+  default:
+    name: proxy
+    external: true
+
+volumes:
+  portainer-data:
+    name: portainer-data

@@ -1,0 +1,46 @@
+### Global Reverse Proxy Stack
+# NOTE: Binds to Port 80 on your host, must be free in order to work!
+#
+# ===Usage===
+# Bring up the Traefik Reverse Proxy:
+#   docker compose -f stack-proxy.yml -p proxy up -d
+#
+# Bring down and stop the Reverse Proxy:
+#   docker compose down
+---
+services:
+  proxy:
+    image: traefik:2.10
+    container_name: proxy
+    restart: always
+    environment:  # https://docs.traefik.io/reference/static-configuration/env/
+      TRAEFIK_ENTRYPOINTS_WEB_ADDRESS: :80
+      TRAEFIK_API_DASHBOARD: true
+      TRAEFIK_PROVIDERS_DOCKER: true
+      TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT: false
+      TRAEFIK_PROVIDERS_DOCKER_DEFAULTRULE: >
+        Host(`{{ or (index .Labels "traefik.hostname")
+                    (index .Labels "com.docker.compose.service")
+                    .Name 
+              }}.localtest.me`)
+      TRAEFIK_PROVIDERS_DOCKER_ALLOWEMPTYSERVICES: true
+      TRAEFIK_PROVIDERS_DOCKER_NETWORK: proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - default
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.hostname=proxy"
+      - "traefik.http.routers.proxy.service=api@internal"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+networks:
+  default:
+    name: proxy
+  internal:
+    name: internal
+    external: true

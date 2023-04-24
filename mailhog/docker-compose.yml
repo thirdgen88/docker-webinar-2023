@@ -1,0 +1,19 @@
+### Mailhog SMTP Test Tool
+---
+services:
+  # Mailhog - SMTP Test Tool
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    hostname: mailhog
+    container_name: mailhog
+    restart: always
+    ports:
+      - 1025:1025
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.mailhog.loadbalancer.server.port: 8025
+
+networks:
+  default:
+    name: proxy
+    external: true

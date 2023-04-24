@@ -1,0 +1,278 @@
+{
+    "templates": [
+        {
+            "$type": "io.inductiveautomation.devbot.portainer.Template.Container",
+            "categories": [
+                "ignition"
+            ],
+            "command": null,
+            "description": "Official Ignition Docker Image - 8.1 Nightly",
+            "env": [
+                {
+                    "default": "Y",
+                    "description": null,
+                    "label": "Accept Ignition EULA",
+                    "name": "ACCEPT_IGNITION_EULA",
+                    "preset": null,
+                    "select": [
+                        {
+                            "default": true,
+                            "text": "Yes",
+                            "value": "Y"
+                        },
+                        {
+                            "default": false,
+                            "text": "No",
+                            "value": "N"
+                        }
+                    ]
+                },
+                {
+                    "default": "admin",
+                    "description": null,
+                    "label": "Admin Username",
+                    "name": "GATEWAY_ADMIN_USERNAME",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": "password",
+                    "description": null,
+                    "label": "Admin Password",
+                    "name": "GATEWAY_ADMIN_PASSWORD",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": "STANDARD",
+                    "description": null,
+                    "label": "Edition",
+                    "name": "IGNITION_EDITION",
+                    "preset": null,
+                    "select": [
+                        {
+                            "default": true,
+                            "text": "standard",
+                            "value": "standard"
+                        },
+                        {
+                            "default": false,
+                            "text": "edge",
+                            "value": "edge"
+                        },
+                        {
+                            "default": false,
+                            "text": "maker",
+                            "value": "maker"
+                        }
+                    ]
+                },
+                {
+                    "default": null,
+                    "description": "Required for Maker edition",
+                    "label": "Maker Activation Token",
+                    "name": "IGNITION_ACTIVATION_TOKEN",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": null,
+                    "description": "Required for Maker edition",
+                    "label": "Maker License Key",
+                    "name": "IGNITION_LICENSE_KEY",
+                    "preset": null,
+                    "select": null
+                }
+            ],
+            "hostname": null,
+            "image": "inductiveautomation/ignition:nightly",
+            "labels": [
+                {
+                    "name": "traefik.enable",
+                    "value": "true"
+                }
+            ],
+            "logo": "https://inductiveautomation.com/static/images/icons/ignition-logo-2x.png",
+            "name": "ignition-81-nightly",
+            "network": "proxy",
+            "note": "See <code><a href=\"https://docs.inductiveautomation.com/display/DOC81/Docker+Image\">inductiveautomation/ignition</a></code> for detailed usage instructions.",
+            "platform": "linux",
+            "registry": null,
+            "restart-policy": null,
+            "title": "Ignition 8.1 (Nightly)",
+            "type": 1,
+            "volumes": [
+                {
+                    "container": "/usr/local/bin/ignition/data"
+                }
+            ]
+        },
+        {
+            "$type": "io.inductiveautomation.devbot.portainer.Template.Container",
+            "categories": [
+                "ignition"
+            ],
+            "command": null,
+            "description": "Official Ignition Docker Image - 8.1",
+            "env": [
+                {
+                    "default": "Y",
+                    "description": null,
+                    "label": "Accept Ignition EULA",
+                    "name": "ACCEPT_IGNITION_EULA",
+                    "preset": null,
+                    "select": [
+                        {
+                            "default": true,
+                            "text": "Yes",
+                            "value": "Y"
+                        },
+                        {
+                            "default": false,
+                            "text": "No",
+                            "value": "N"
+                        }
+                    ]
+                },
+                {
+                    "default": "admin",
+                    "description": null,
+                    "label": "Admin Username",
+                    "name": "GATEWAY_ADMIN_USERNAME",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": "password",
+                    "description": null,
+                    "label": "Admin Password",
+                    "name": "GATEWAY_ADMIN_PASSWORD",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": "STANDARD",
+                    "description": null,
+                    "label": "Edition",
+                    "name": "IGNITION_EDITION",
+                    "preset": null,
+                    "select": [
+                        {
+                            "default": true,
+                            "text": "standard",
+                            "value": "standard"
+                        },
+                        {
+                            "default": false,
+                            "text": "edge",
+                            "value": "edge"
+                        },
+                        {
+                            "default": false,
+                            "text": "maker",
+                            "value": "maker"
+                        }
+                    ]
+                },
+                {
+                    "default": null,
+                    "description": "Required for Maker edition",
+                    "label": "Maker Activation Token",
+                    "name": "IGNITION_ACTIVATION_TOKEN",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": null,
+                    "description": "Required for Maker edition",
+                    "label": "Maker License Key",
+                    "name": "IGNITION_LICENSE_KEY",
+                    "preset": null,
+                    "select": null
+                }
+            ],
+            "hostname": null,
+            "image": "inductiveautomation/ignition:8.1",
+            "labels": [
+                {
+                    "name": "traefik.enable",
+                    "value": "true"
+                }
+            ],
+            "logo": "https://inductiveautomation.com/static/images/icons/ignition-logo-2x.png",
+            "name": "ignition-81",
+            "network": "proxy",
+            "note": "See <code><a href=\"https://docs.inductiveautomation.com/display/DOC81/Docker+Image\">inductiveautomation/ignition</a></code> for detailed usage instructions.",
+            "platform": "linux",
+            "registry": null,
+            "restart-policy": null,
+            "title": "Ignition 8.1 (Latest)",
+            "type": 1,
+            "volumes": [
+                {
+                    "container": "/usr/local/bin/ignition/data"
+                }
+            ]
+        },
+        {
+            "$type": "io.inductiveautomation.devbot.portainer.Template.Container",
+            "categories": [
+                "ignition"
+            ],
+            "command": null,
+            "description": "Ignition 7.9 (Latest)",
+            "env": [
+                {
+                    "default": null,
+                    "description": null,
+                    "label": "Gateway Name",
+                    "name": "GATEWAY_SYSTEM_NAME",
+                    "preset": null,
+                    "select": null
+                },
+                {
+                    "default": "false",
+                    "description": null,
+                    "label": "Use SSL?",
+                    "name": "GATEWAY_USESSL",
+                    "preset": null,
+                    "select": [
+                        {
+                            "default": false,
+                            "text": "True",
+                            "value": "true"
+                        },
+                        {
+                            "default": true,
+                            "text": "False",
+                            "value": "false"
+                        }
+                    ]
+                }
+            ],
+            "hostname": null,
+            "image": "kcollins/ignition:7.9",
+            "labels": [
+                {
+                    "name": "traefik.enable",
+                    "value": "true"
+                }
+            ],
+            "logo": "https://inductiveautomation.com/static/images/icons/ignition-logo-2x.png",
+            "name": "ignition-79",
+            "network": "proxy",
+            "note": "See <code><a href=\"https://hub.docker.com/r/kcollins/ignition\">kcollins/ignition</a></code>\n for detailed usage instructions.",
+            "platform": "linux",
+            "registry": null,
+            "restart-policy": null,
+            "title": "Ignition 7.9 (Latest)",
+            "type": 1,
+            "volumes": [
+                {
+                    "container": "/var/lib/ignition/data"
+                }
+            ]
+        }
+    ],
+    "version": "2"
+}

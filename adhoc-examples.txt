@@ -1,0 +1,31 @@
+# Below are some example ad-hoc docker-run commands that you can launch to pair up with your reverse proxy
+
+CONTAINER_NAME=ia-nightly; docker run -d --rm --name ${CONTAINER_NAME} \
+  -l traefik.enable=true \
+  -l traefik.hostname=${CONTAINER_NAME} \
+  --network proxy \
+  --no-healthcheck \
+  -v ${CONTAINER_NAME}-data:/usr/local/bin/ignition/data \
+  -e TZ=America/Chicago -e IGNITION_EDITION=standard -e ACCEPT_IGNITION_EULA=Y -e GATEWAY_ADMIN_PASSWORD=password \
+  --pull always --hostname ${CONTAINER_NAME} \
+  inductiveautomation/ignition:nightly \
+  -a "${CONTAINER_NAME}.localtest.me" \
+  -h 80 \
+  -s 443 \
+  -m 1024 \
+  -d
+
+CONTAINER_NAME=ia-ignition8126; docker run -d --rm --name ${CONTAINER_NAME} \
+  -l traefik.enable=true \
+  -l traefik.hostname=${CONTAINER_NAME} \
+  --network proxy \
+  --no-healthcheck \
+  -v ${CONTAINER_NAME}-data:/usr/local/bin/ignition/data \
+  -e TZ=America/Chicago -e IGNITION_EDITION=standard -e ACCEPT_IGNITION_EULA=Y -e GATEWAY_ADMIN_PASSWORD=password \
+  --hostname ${CONTAINER_NAME} \
+  inductiveautomation/ignition:8.1.27 \
+  -a "${CONTAINER_NAME}.localtest.me" \
+  -h 80 \
+  -s 443 \
+  -m 1024 \
+  -d
